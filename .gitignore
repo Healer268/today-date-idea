@@ -1,5 +1,8 @@
 node_modules
 .pnpm-store
 .next
+dist
 .env*
 npm-debug.log*
+pnpm-lock.yaml
+vinext-*.log
