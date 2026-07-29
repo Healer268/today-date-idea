@@ -8,8 +8,11 @@
     "start": "vinext start"
   },
   "dependencies": {
+    "@vitejs/plugin-react": "6.0.0",
+    "@vitejs/plugin-rsc": "0.5.26",
     "react": "19.2.6",
     "react-dom": "19.2.6",
+    "react-server-dom-webpack": "19.2.6",
     "vinext": "1.0.0-beta.4",
     "vite": "8.0.0"
   }
