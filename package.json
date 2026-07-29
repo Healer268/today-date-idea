@@ -3,14 +3,14 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "next build && node scripts/prepare-dist.mjs",
-    "start": "next start",
-    "lint": "next lint"
+    "dev": "vinext dev",
+    "build": "vinext build && node scripts/prepare-dist.mjs",
+    "start": "vinext start"
   },
   "dependencies": {
-    "next": "15.5.21",
-    "react": "19.0.0",
-    "react-dom": "19.0.0"
+    "react": "19.2.6",
+    "react-dom": "19.2.6",
+    "vinext": "1.0.0-beta.4",
+    "vite": "8.0.0"
   }
 }
