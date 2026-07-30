@@ -170,7 +170,6 @@ export default function Home() {
   const [startDate, setStartDate] = useState(defaults.started);
   const [anniversaryName, setAnniversaryName] = useState("我们的纪念日");
   const [anniversaryDate, setAnniversaryDate] = useState(defaults.anniversary);
-  const [editingProfile, setEditingProfile] = useState(false);
   const [hydrated, setHydrated] = useState(false);
 
   useEffect(() => {
@@ -261,6 +260,10 @@ export default function Home() {
     setSaved(false);
   };
 
+  const scrollToSettings = () => {
+    document.getElementById("couple-settings")?.scrollIntoView({ behavior: "smooth", block: "center" });
+  };
+
   return (
     <main>
       <div className="ambient ambient-one" />
@@ -270,7 +273,7 @@ export default function Home() {
           <span className="brand-mark"><Icon name="heart" size={17} strokeWidth={2.2} /></span>
           <span>今天约什么</span>
         </a>
-        <button className="couple couple-button" onClick={() => setEditingProfile((value) => !value)}>
+        <button className="couple couple-button" onClick={scrollToSettings}>
           <span className="avatar avatar-one">{(personOne || "我").slice(0, 1)}</span>
           <span className="avatar avatar-two">{(personTwo || "你").slice(0, 1)}</span>
           <span className="together"><span className="online-dot" /> 在一起 {relationshipDays} 天</span>
@@ -299,7 +302,7 @@ export default function Home() {
         <div className="control-group budget-row">
           <div className="control-title"><span>本次预算</span><small>两个人的总预算</small></div>
           <div className="budget-control">
-            <label className="money-input"><span>¥</span><input type="number" min="0" max="99999" value={budget} onChange={(event) => updateBudget(event.target.value)} aria-label="输入约会预算" /></label>
+            <label className="money-input"><span>¥</span><input type="number" min="0" max="99999" value={budget} onFocus={(event) => event.target.select()} onChange={(event) => updateBudget(event.target.value)} aria-label="输入约会预算" /></label>
             <div className="budget-presets">
               {budgetPresets.map((amount) => <button key={amount} className={budget === amount ? "active" : ""} onClick={() => updateBudget(amount)}>{amount === 0 ? "免费" : amount}</button>)}
             </div>
@@ -308,21 +311,21 @@ export default function Home() {
         <p className="budget-hint"><Icon name="check" size={14} /> 已找到 {affordableIdeas.length} 个预算内灵感，最高不超过 ¥{budget}</p>
       </section>
 
-      <section className={`profile-panel ${editingProfile ? "open" : ""}`} aria-label="情侣与纪念日设置">
-        <button className="profile-toggle" onClick={() => setEditingProfile((value) => !value)}>
+      <section id="couple-settings" className="profile-panel open" aria-label="情侣与纪念日设置">
+        <div className="profile-toggle profile-heading">
           <span><Icon name="heart" size={16} /> 我们的资料与纪念日</span>
-          <span>{editingProfile ? "收起" : "编辑"} <Icon name="chevron" size={14} /></span>
-        </button>
-        {editingProfile && (
-          <div className="profile-fields">
-            <label><span>你的名字</span><input value={personOne} maxLength={8} onChange={(event) => setPersonOne(event.target.value)} placeholder="输入名字" /></label>
-            <label><span>TA 的名字</span><input value={personTwo} maxLength={8} onChange={(event) => setPersonTwo(event.target.value)} placeholder="输入名字" /></label>
-            <label><span>在一起的日期</span><input type="date" value={startDate} onChange={(event) => setStartDate(event.target.value)} /></label>
-            <label><span>纪念日名称</span><input value={anniversaryName} maxLength={16} onChange={(event) => setAnniversaryName(event.target.value)} placeholder="例如：第一次见面" /></label>
-            <label><span>纪念日日期</span><input type="date" value={anniversaryDate} onChange={(event) => setAnniversaryDate(event.target.value)} /></label>
-            <div className="saved-note"><Icon name="check" size={15} /> 修改会自动保存在此设备</div>
-          </div>
-        )}
+          <span>直接填写，自动保存</span>
+        </div>
+        <div className="profile-fields">
+          <label><span>你的名字</span><input value={personOne} maxLength={8} onChange={(event) => setPersonOne(event.target.value)} placeholder="输入名字" /></label>
+          <label><span>TA 的名字</span><input value={personTwo} maxLength={8} onChange={(event) => setPersonTwo(event.target.value)} placeholder="输入名字" /></label>
+          <label><span>在一起的日期</span><input type="date" value={startDate} onChange={(event) => setStartDate(event.target.value)} /></label>
+          <label><span>纪念日名称</span><input value={anniversaryName} maxLength={16} onChange={(event) => setAnniversaryName(event.target.value)} placeholder="例如：第一次见面" /></label>
+          <label><span>纪念日日期</span><input type="date" value={anniversaryDate} onChange={(event) => setAnniversaryDate(event.target.value)} /></label>
+          <button className="save-settings" onClick={() => showToast("设置已保存")}>
+            <Icon name="check" size={15} /> 保存设置
+          </button>
+        </div>
       </section>
 
       <section className="result-wrap">
@@ -368,7 +371,7 @@ export default function Home() {
           <p><b>{anniversaryName || "我们的纪念日"}</b><small>{anniversary.label}</small></p>
         </div>
         <div className="progress"><i style={{ width: `${anniversary.progress}%` }} /></div>
-        <button onClick={() => setEditingProfile(true)} aria-label="编辑纪念日"><Icon name="edit" size={17} /></button>
+        <button onClick={scrollToSettings} aria-label="编辑纪念日"><Icon name="edit" size={17} /></button>
       </section>
 
       <footer>
@@ -379,7 +382,7 @@ export default function Home() {
       <nav className="mobile-nav" aria-label="移动端导航">
         <button className="active"><Icon name="home" size={20} /><span>今天</span></button>
         <button onClick={() => showToast("约会清单还是空的，先收藏一个吧")}><Icon name="bookmark" size={20} /><span>清单</span></button>
-        <button onClick={() => setEditingProfile(true)}><Icon name="user" size={20} /><span>我们</span></button>
+        <button onClick={scrollToSettings}><Icon name="user" size={20} /><span>我们</span></button>
       </nav>
       <div className={`toast ${toast ? "show" : ""}`}><Icon name="check" size={17} />{toast}</div>
     </main>

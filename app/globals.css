@@ -90,10 +90,10 @@ main { min-height: 100vh; position: relative; overflow: hidden; padding-bottom: 
 .profile-panel { width: min(760px, calc(100% - 40px)); margin: -15px auto 30px; border: 1px solid rgba(82,64,67,.08); border-radius: 18px; background: rgba(255,255,255,.58); position: relative; z-index: 2; overflow: hidden; transition: .25s ease; }
 .profile-panel.open { background: rgba(255,255,255,.82); box-shadow: 0 16px 45px rgba(71,48,51,.07); }
 .profile-toggle { width: 100%; border: 0; background: transparent; padding: 14px 17px; display: flex; align-items: center; justify-content: space-between; color: #5f595d; cursor: pointer; }
+.profile-heading { cursor: default; }
 .profile-toggle > span { display: flex; align-items: center; gap: 7px; font-size: 11px; font-weight: 620; }
 .profile-toggle > span:first-child svg { color: var(--rose); fill: rgba(233,95,117,.12); }
 .profile-toggle > span:last-child { color: #a29ca0; font-size: 10px; font-weight: 500; }
-.profile-panel.open .profile-toggle > span:last-child svg { transform: rotate(90deg); }
 .profile-fields { padding: 4px 17px 17px; display: grid; grid-template-columns: repeat(6, 1fr); gap: 11px; }
 .profile-fields label { grid-column: span 2; display: flex; flex-direction: column; gap: 6px; }
 .profile-fields label:nth-child(4) { grid-column: span 3; }
@@ -101,7 +101,7 @@ main { min-height: 100vh; position: relative; overflow: hidden; padding-bottom: 
 .profile-fields label > span { color: #918b8f; font-size: 9px; padding-left: 2px; }
 .profile-fields input { width: 100%; min-width: 0; height: 39px; border: 1px solid rgba(75,57,61,.1); border-radius: 10px; outline: 0; background: #faf9f8; color: #464044; padding: 0 11px; font-size: 11px; transition: .2s ease; }
 .profile-fields input:focus { border-color: rgba(233,95,117,.5); background: white; box-shadow: 0 0 0 4px rgba(233,95,117,.06); }
-.saved-note { grid-column: 1 / -1; display: flex; align-items: center; gap: 5px; color: #79a785; font-size: 9px; }
+.save-settings { grid-column: 1 / -1; justify-self: end; height: 36px; border: 0; border-radius: 10px; padding: 0 14px; display: flex; align-items: center; gap: 6px; color: white; background: linear-gradient(180deg, #ed6c80, #dd5269); box-shadow: 0 8px 18px rgba(220,77,101,.18); cursor: pointer; font-size: 10px; font-weight: 620; }
 
 .result-wrap { width: min(760px, calc(100% - 40px)); margin: 0 auto; display: flex; flex-direction: column; align-items: center; position: relative; z-index: 1; }
 .idea-card { width: 100%; min-height: 360px; display: grid; grid-template-columns: 41% 59%; background: white; border-radius: 28px; overflow: hidden; box-shadow: 0 24px 80px rgba(82, 52, 54, .11); border: 1px solid rgba(87, 65, 67, .06); transition: opacity .2s, transform .42s cubic-bezier(.2,.8,.2,1); }
