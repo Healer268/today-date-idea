@@ -317,6 +317,19 @@ const cityProfiles = [
   { name: "福州", lat: 26.08, lng: 119.30, tags: ["滨海", "历史", "南方"], spots: ["烟台山", "三坊七巷", "西湖公园"] },
   { name: "宁波", lat: 29.87, lng: 121.55, tags: ["滨海", "滨水", "历史"], spots: ["老外滩", "月湖", "东钱湖"] },
   { name: "无锡", lat: 31.49, lng: 120.31, tags: ["滨水", "园林", "历史"], spots: ["蠡湖", "南长街", "惠山古镇"] },
+  {
+    name: "常州",
+    lat: 31.81,
+    lng: 119.97,
+    tags: ["历史", "滨水", "艺术", "自然"],
+    spots: ["天宁区 · 青果巷", "钟楼区 · 运河五号", "武进区 · 西太湖"],
+    spotGroups: {
+      free: ["天宁区 · 红梅公园", "天宁区 · 青果巷", "钟楼区 · 青枫公园", "武进区 · 西太湖揽月湾"],
+      culture: ["天宁区 · 青果巷", "钟楼区 · 运河五号创意街区", "新北区 · 常州文化广场与博物馆", "武进区 · 淹城遗址公园"],
+      nature: ["武进区 · 西太湖湖岸线", "钟楼区 · 青枫公园", "天宁区 · 红梅公园", "溧阳市 · 天目湖"],
+      premium: ["新北区 · 中华恐龙园与迪诺水镇", "武进区 · 淹城春秋乐园", "金坛区 · 东方盐湖城", "溧阳市 · 天目湖与南山竹海"],
+    },
+  },
   { name: "珠海", lat: 22.27, lng: 113.58, tags: ["滨海", "休闲", "南方"], spots: ["情侣路", "香山云道", "唐家湾"] },
   { name: "佛山", lat: 23.02, lng: 113.12, tags: ["美食", "历史", "南方"], spots: ["岭南天地", "千灯湖", "顺峰山"] },
   { name: "南宁", lat: 22.82, lng: 108.37, tags: ["南方", "自然", "美食"], spots: ["邕江边", "青秀山", "三街两巷"] },
@@ -389,6 +402,16 @@ const provinceTags = {
 
 function findProvinceByCity(cityName) {
   return regionGroups.find(([, cities]) => cities.includes(cityName))?.[0] || "上海市";
+}
+
+function chooseCitySpot(idea, profile) {
+  if (!profile.spotGroups) return profile.spots[idea.id % profile.spots.length];
+  let group = "culture";
+  if (idea.costMin >= 300) group = "premium";
+  else if (idea.costMax <= 120) group = "free";
+  else if (idea.cityTags?.some((tag) => ["自然", "滨水", "滨海", "山城"].includes(tag))) group = "nature";
+  const choices = profile.spotGroups[group];
+  return choices[idea.id % choices.length];
 }
 
 const ideaSeeds = [
@@ -642,8 +665,8 @@ export default function Home() {
   }, [filtered, cityIdeas, currentId]);
 
   const current = dateIdeas.find((idea) => idea.id === currentId) || dateIdeas[0];
-  const currentPlace = `${selectedCity} · ${current.cityTags?.length
-    ? cityProfile.spots[current.id % cityProfile.spots.length]
+  const currentPlace = `${selectedCity} · ${current.cityTags?.length || cityProfile.spotGroups
+    ? chooseCitySpot(current, cityProfile)
     : current.place}`;
   const relationshipDays = useMemo(() => {
     if (!startDate) return 0;
