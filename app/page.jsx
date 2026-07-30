@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 
-const dateIdeas = [
+const featuredIdeas = [
   {
     id: 1,
     title: "去吹晚风，看一场日落",
@@ -291,8 +291,125 @@ const dateIdeas = [
   },
 ];
 
+const cityProfiles = [
+  { name: "北京", lat: 39.90, lng: 116.40, tags: ["都市", "历史", "艺术", "北方"], spots: ["什刹海", "亮马河", "798 艺术区"] },
+  { name: "上海", lat: 31.23, lng: 121.47, tags: ["都市", "滨水", "艺术"], spots: ["苏州河", "西岸", "武康路"] },
+  { name: "广州", lat: 23.13, lng: 113.26, tags: ["都市", "美食", "南方"], spots: ["珠江边", "东山口", "永庆坊"] },
+  { name: "深圳", lat: 22.54, lng: 114.06, tags: ["都市", "滨海", "艺术"], spots: ["深圳湾", "华侨城", "大鹏半岛"] },
+  { name: "成都", lat: 30.57, lng: 104.07, tags: ["休闲", "美食", "历史"], spots: ["望平街", "浣花溪", "玉林路"] },
+  { name: "重庆", lat: 29.56, lng: 106.55, tags: ["山城", "夜景", "美食"], spots: ["南滨路", "鹅岭", "山城步道"] },
+  { name: "杭州", lat: 30.27, lng: 120.15, tags: ["滨水", "历史", "自然"], spots: ["西湖边", "运河畔", "九溪"] },
+  { name: "南京", lat: 32.06, lng: 118.80, tags: ["历史", "滨水", "艺术"], spots: ["玄武湖", "颐和路", "秦淮河"] },
+  { name: "武汉", lat: 30.59, lng: 114.30, tags: ["滨水", "校园", "美食"], spots: ["东湖", "汉口江滩", "黎黄陂路"] },
+  { name: "西安", lat: 34.34, lng: 108.94, tags: ["历史", "北方", "美食"], spots: ["城墙边", "大明宫", "曲江池"] },
+  { name: "苏州", lat: 31.30, lng: 120.58, tags: ["历史", "滨水", "园林"], spots: ["平江路", "金鸡湖", "山塘街"] },
+  { name: "长沙", lat: 28.23, lng: 112.94, tags: ["美食", "夜景", "都市"], spots: ["湘江边", "潮宗街", "梅溪湖"] },
+  { name: "青岛", lat: 36.07, lng: 120.38, tags: ["滨海", "北方", "艺术"], spots: ["小麦岛", "八大关", "栈桥"] },
+  { name: "厦门", lat: 24.48, lng: 118.09, tags: ["滨海", "艺术", "休闲"], spots: ["环岛路", "沙坡尾", "鼓浪屿"] },
+  { name: "大连", lat: 38.91, lng: 121.61, tags: ["滨海", "北方", "自然"], spots: ["星海湾", "东港", "滨海路"] },
+  { name: "昆明", lat: 25.04, lng: 102.71, tags: ["自然", "休闲", "南方"], spots: ["翠湖", "滇池", "斗南花市"] },
+  { name: "三亚", lat: 18.25, lng: 109.51, tags: ["滨海", "南方", "自然"], spots: ["椰梦长廊", "后海村", "鹿回头"] },
+  { name: "哈尔滨", lat: 45.80, lng: 126.53, tags: ["北方", "冰雪", "历史"], spots: ["松花江畔", "中央大街", "太阳岛"] },
+  { name: "天津", lat: 39.09, lng: 117.20, tags: ["北方", "历史", "滨水"], spots: ["海河边", "五大道", "意式风情区"] },
+  { name: "郑州", lat: 34.75, lng: 113.62, tags: ["北方", "历史", "都市"], spots: ["如意湖", "商都遗址", "二砂文创园"] },
+  { name: "济南", lat: 36.67, lng: 116.98, tags: ["北方", "滨水", "历史"], spots: ["大明湖", "曲水亭街", "百花洲"] },
+  { name: "合肥", lat: 31.82, lng: 117.23, tags: ["都市", "自然", "滨水"], spots: ["天鹅湖", "环城公园", "逍遥津"] },
+  { name: "福州", lat: 26.08, lng: 119.30, tags: ["滨海", "历史", "南方"], spots: ["烟台山", "三坊七巷", "西湖公园"] },
+  { name: "宁波", lat: 29.87, lng: 121.55, tags: ["滨海", "滨水", "历史"], spots: ["老外滩", "月湖", "东钱湖"] },
+  { name: "无锡", lat: 31.49, lng: 120.31, tags: ["滨水", "园林", "历史"], spots: ["蠡湖", "南长街", "惠山古镇"] },
+  { name: "珠海", lat: 22.27, lng: 113.58, tags: ["滨海", "休闲", "南方"], spots: ["情侣路", "香山云道", "唐家湾"] },
+  { name: "佛山", lat: 23.02, lng: 113.12, tags: ["美食", "历史", "南方"], spots: ["岭南天地", "千灯湖", "顺峰山"] },
+  { name: "南宁", lat: 22.82, lng: 108.37, tags: ["南方", "自然", "美食"], spots: ["邕江边", "青秀山", "三街两巷"] },
+  { name: "贵阳", lat: 26.65, lng: 106.63, tags: ["山城", "自然", "美食"], spots: ["观山湖", "青云市集", "黔灵山"] },
+  { name: "兰州", lat: 36.06, lng: 103.83, tags: ["北方", "美食", "滨水"], spots: ["黄河边", "白塔山", "中山桥"] },
+  { name: "乌鲁木齐", lat: 43.83, lng: 87.62, tags: ["北方", "自然", "美食"], spots: ["红山公园", "南湖广场", "水磨沟"] },
+  { name: "沈阳", lat: 41.80, lng: 123.43, tags: ["北方", "历史", "艺术"], spots: ["青年公园", "中街", "红梅文创园"] },
+  { name: "长春", lat: 43.82, lng: 125.32, tags: ["北方", "自然", "电影"], spots: ["南湖公园", "新民大街", "净月潭"] },
+  { name: "太原", lat: 37.87, lng: 112.55, tags: ["北方", "历史", "自然"], spots: ["汾河公园", "晋阳湖", "钟楼街"] },
+  { name: "南昌", lat: 28.68, lng: 115.86, tags: ["滨水", "历史", "美食"], spots: ["赣江边", "八一公园", "万寿宫"] },
+  { name: "海口", lat: 20.04, lng: 110.20, tags: ["滨海", "南方", "休闲"], spots: ["云洞图书馆", "骑楼老街", "西秀海滩"] },
+];
+
+const ideaSeeds = [
+  ["咖啡风味盲测", "☕", 40, 140, ["松弛", "好玩"], ["都市", "艺术"], "独立咖啡店"],
+  ["夜晚骑行追风", "🚲", 0, 60, ["冒险", "松弛"], ["滨水", "滨海", "都市"], "城市骑行道"],
+  ["唱片店交换一首歌", "💿", 30, 180, ["浪漫", "松弛"], ["艺术", "都市", "电影"], "唱片店"],
+  ["逛早市做早餐", "🥬", 30, 120, ["好玩", "宅家"], ["美食", "历史"], "本地早市"],
+  ["水族馆看蓝色世界", "🐠", 180, 500, ["浪漫", "松弛"], ["滨海", "都市"], "海洋馆"],
+  ["天文馆寻找同一颗星", "🪐", 80, 300, ["浪漫", "好玩"], ["都市", "北方"], "天文馆"],
+  ["拍一组复古大头贴", "📸", 30, 100, ["好玩", "浪漫"], ["都市", "艺术"], "拍照馆"],
+  ["挑战双人密室", "🔐", 160, 420, ["冒险", "好玩"], ["都市", "历史"], "主题密室"],
+  ["攀岩馆互相保护", "🧗", 180, 480, ["冒险", "好玩"], ["都市", "山城"], "攀岩馆"],
+  ["轮滑场牵手练习", "🛼", 100, 300, ["好玩", "浪漫"], ["都市", "北方"], "轮滑场"],
+  ["打一场双人羽毛球", "🏸", 40, 160, ["好玩", "松弛"], ["都市", "校园"], "运动中心"],
+  ["参加一节料理课", "🥘", 240, 700, ["宅家", "好玩"], ["美食", "都市"], "料理教室"],
+  ["去郊外露营看云", "⛺", 200, 900, ["冒险", "松弛"], ["自然", "山城"], "近郊营地"],
+  ["一起准备一顿烧烤", "🍢", 120, 400, ["好玩", "松弛"], ["自然", "滨水"], "户外营地"],
+  ["听一场爵士现场", "🎷", 160, 600, ["浪漫", "松弛"], ["艺术", "都市"], "爵士酒馆"],
+  ["去 Livehouse 听歌", "🎸", 180, 680, ["好玩", "冒险"], ["艺术", "都市"], "音乐现场"],
+  ["看一场脱口秀", "🎙️", 120, 420, ["好玩", "松弛"], ["都市", "艺术"], "小剧场"],
+  ["博物馆寻宝游戏", "🏛️", 0, 160, ["好玩", "松弛"], ["历史", "艺术"], "博物馆"],
+  ["去海边捡一枚贝壳", "🐚", 20, 180, ["浪漫", "松弛"], ["滨海"], "海岸线"],
+  ["爬到城市高处看落日", "🌄", 0, 120, ["冒险", "浪漫"], ["山城", "自然"], "观景步道"],
+  ["植物园寻找心形叶子", "🌿", 20, 160, ["松弛", "浪漫"], ["自然", "南方"], "植物园"],
+  ["动物园认领今日最爱", "🦒", 80, 300, ["好玩", "松弛"], ["自然", "都市"], "动物园"],
+  ["做一件双人手作", "🧶", 120, 480, ["好玩", "浪漫"], ["艺术", "历史"], "手作工坊"],
+  ["调一瓶彼此的香气", "🧴", 260, 900, ["浪漫", "好玩"], ["都市", "艺术"], "香氛工作室"],
+  ["做一对情侣银戒", "💍", 400, 1600, ["浪漫", "好玩"], ["都市", "艺术"], "金工工作室"],
+  ["安排一次双人 SPA", "🧖", 500, 1800, ["松弛", "浪漫"], ["都市", "休闲"], "水疗中心"],
+  ["互拍一组城市写真", "📷", 0, 600, ["浪漫", "好玩"], ["艺术", "历史", "滨水"], "城市街区"],
+  ["体验一场茶席", "🍵", 100, 500, ["松弛", "浪漫"], ["历史", "园林"], "茶空间"],
+  ["尝一轮特色甜品", "🍰", 60, 260, ["好玩", "松弛"], ["美食", "都市"], "甜品街区"],
+  ["夜市限定美食挑战", "🌮", 60, 240, ["好玩", "冒险"], ["美食", "夜景"], "夜市"],
+  ["一起去湖边钓鱼", "🎣", 80, 320, ["松弛", "冒险"], ["滨水", "自然"], "湖边"],
+  ["划一艘双人皮划艇", "🛶", 180, 600, ["冒险", "好玩"], ["滨水", "滨海"], "水上运动中心"],
+  ["去滑雪场摔进雪里", "🎿", 500, 1800, ["冒险", "好玩"], ["冰雪", "北方"], "滑雪场"],
+  ["体验一次冲浪课程", "🏄", 400, 1400, ["冒险", "好玩"], ["滨海", "南方"], "冲浪海滩"],
+  ["看一场演唱会", "🎫", 600, 2600, ["浪漫", "好玩"], ["都市", "艺术"], "演出场馆"],
+  ["看一部音乐剧", "🎭", 300, 1600, ["浪漫", "松弛"], ["都市", "艺术"], "剧院"],
+  ["坐轮渡看两岸夜色", "⛴️", 20, 180, ["浪漫", "松弛"], ["滨水", "滨海"], "轮渡码头"],
+  ["去郊外认真看星星", "🌌", 60, 500, ["浪漫", "冒险"], ["自然", "北方"], "近郊观星点"],
+  ["为一场日出早起", "🌞", 0, 160, ["浪漫", "冒险"], ["滨海", "自然", "山城"], "日出观景点"],
+  ["跳蚤市场交换礼物", "🎁", 20, 200, ["好玩", "松弛"], ["历史", "艺术"], "周末市集"],
+  ["古着店为彼此搭配", "🧥", 80, 500, ["好玩", "浪漫"], ["都市", "艺术"], "古着街区"],
+  ["在家安排双人护理", "🫧", 40, 220, ["宅家", "松弛"], ["都市", "休闲"], "家里"],
+  ["合作通关一款游戏", "🎮", 0, 300, ["宅家", "好玩"], ["都市", "校园"], "家里或电竞馆"],
+  ["拼完一幅属于你们的拼图", "🧩", 30, 180, ["宅家", "松弛"], ["都市", "休闲"], "家里"],
+  ["沿老街寻找城市故事", "🗺️", 0, 100, ["冒险", "松弛"], ["历史", "艺术"], "历史街区"],
+];
+
+const ideaModes = [
+  { name: "轻量版", factor: 0.72, subtitle: "少一点安排，多一点随心" },
+  { name: "经典版", factor: 1, subtitle: "刚刚好的仪式感和松弛感" },
+  { name: "升级版", factor: 1.35, subtitle: "把体验做得更完整一点" },
+  { name: "纪念日版", factor: 1.7, subtitle: "适合值得认真庆祝的日子" },
+];
+
+const ideaGradients = ["sunset", "pasta", "book", "bus", "cinema", "flower", "picnic", "gallery", "trip", "citywalk", "breakfast", "pottery", "boardgame", "cake", "dinner", "onsen", "park", "hotel", "letter", "karaoke"];
+
+const generatedIdeas = ideaSeeds.flatMap((seed, seedIndex) => ideaModes.map((mode, modeIndex) => {
+  const [title, emoji, baseMin, baseMax, mood, cityTags, place] = seed;
+  const costMin = Math.round((baseMin * mode.factor) / 10) * 10;
+  const costMax = Math.max(costMin, Math.round((baseMax * mode.factor) / 10) * 10);
+  return {
+    id: 23 + seedIndex * ideaModes.length + modeIndex,
+    title: `${title} · ${mode.name}`,
+    subtitle: mode.subtitle,
+    emoji,
+    mood,
+    cityTags,
+    costMin,
+    costMax,
+    time: modeIndex < 2 ? "1–3 小时" : "半天",
+    place,
+    gradient: ideaGradients[(seedIndex + modeIndex) % ideaGradients.length],
+    plan: [`一起选定最期待的环节`, `把花费控制在 ¥${costMin}–${costMax}`, "为今天留下一张照片或一句话"],
+  };
+})).slice(0, 200 - featuredIdeas.length);
+
+const dateIdeas = [...featuredIdeas, ...generatedIdeas];
 const moods = ["随心", "浪漫", "好玩", "松弛", "宅家", "冒险"];
-const budgetPresets = [0, 100, 200, 500, 800];
+const budgetRanges = [[0, 100], [100, 300], [300, 800], [800, 3000]];
 const DAY = 86400000;
 const storageKey = "today-date-idea-settings";
 
@@ -373,7 +490,9 @@ function Icon({ name, size = 20, strokeWidth = 1.8 }) {
 export default function Home() {
   const defaults = useMemo(() => getDefaultDates(), []);
   const [mood, setMood] = useState("随心");
-  const [budget, setBudget] = useState(200);
+  const [budgetMin, setBudgetMin] = useState(0);
+  const [budgetMax, setBudgetMax] = useState(300);
+  const [selectedCity, setSelectedCity] = useState("上海");
   const [currentId, setCurrentId] = useState(1);
   const [saved, setSaved] = useState(false);
   const [revealing, setRevealing] = useState(false);
@@ -405,7 +524,10 @@ export default function Home() {
       if (typeof stored.anniversaryDate === "string") setAnniversaryDate(stored.anniversaryDate);
       if (typeof stored.avatarOne === "string") setAvatarOne(stored.avatarOne);
       if (typeof stored.avatarTwo === "string") setAvatarTwo(stored.avatarTwo);
-      if (Number.isFinite(stored.budget)) setBudget(stored.budget);
+      if (Number.isFinite(stored.budgetMin)) setBudgetMin(stored.budgetMin);
+      if (Number.isFinite(stored.budgetMax)) setBudgetMax(stored.budgetMax);
+      if (!Number.isFinite(stored.budgetMax) && Number.isFinite(stored.budget)) setBudgetMax(stored.budget);
+      if (cityProfiles.some((city) => city.name === stored.selectedCity)) setSelectedCity(stored.selectedCity);
     } catch {
       // Keep the friendly defaults when saved data is unavailable.
     }
@@ -415,14 +537,24 @@ export default function Home() {
   useEffect(() => {
     if (!hydrated) return;
     window.localStorage.setItem(storageKey, JSON.stringify({
-      personOne, personTwo, startDate, anniversaryName, anniversaryDate, avatarOne, avatarTwo, budget,
+      personOne, personTwo, startDate, anniversaryName, anniversaryDate,
+      avatarOne, avatarTwo, budgetMin, budgetMax, selectedCity,
     }));
-  }, [personOne, personTwo, startDate, anniversaryName, anniversaryDate, avatarOne, avatarTwo, budget, hydrated]);
+  }, [personOne, personTwo, startDate, anniversaryName, anniversaryDate, avatarOne, avatarTwo, budgetMin, budgetMax, selectedCity, hydrated]);
 
-  const affordableIdeas = useMemo(
-    () => dateIdeas.filter((idea) => idea.costMin <= budget),
-    [budget],
+  const cityProfile = useMemo(
+    () => cityProfiles.find((city) => city.name === selectedCity) || cityProfiles[1],
+    [selectedCity],
   );
+
+  const cityIdeas = useMemo(() => dateIdeas.filter((idea) => {
+    if (!idea.cityTags?.length) return true;
+    return idea.cityTags.some((tag) => cityProfile.tags.includes(tag));
+  }), [cityProfile]);
+
+  const affordableIdeas = useMemo(() => cityIdeas.filter(
+    (idea) => idea.costMax >= budgetMin && idea.costMin <= budgetMax,
+  ), [cityIdeas, budgetMin, budgetMax]);
 
   const filtered = useMemo(() => {
     const pool = affordableIdeas.filter((idea) => mood === "随心" || idea.mood.includes(mood));
@@ -430,11 +562,14 @@ export default function Home() {
   }, [affordableIdeas, mood]);
 
   useEffect(() => {
-    const available = filtered.length ? filtered : dateIdeas.filter((idea) => idea.costMin === 0);
+    const available = filtered.length ? filtered : cityIdeas.slice(0, 1);
     if (!available.some((idea) => idea.id === currentId)) setCurrentId(available[0].id);
-  }, [filtered, currentId]);
+  }, [filtered, cityIdeas, currentId]);
 
   const current = dateIdeas.find((idea) => idea.id === currentId) || dateIdeas[0];
+  const currentPlace = `${selectedCity} · ${current.cityTags?.length
+    ? cityProfile.spots[current.id % cityProfile.spots.length]
+    : current.place}`;
   const relationshipDays = useMemo(() => {
     if (!startDate) return 0;
     return Math.max(0, Math.floor((new Date().setHours(0, 0, 0, 0) - new Date(`${startDate}T00:00:00`).getTime()) / DAY));
@@ -501,7 +636,7 @@ export default function Home() {
   const pickIdea = () => {
     setRevealing(true);
     setSaved(false);
-    const pool = filtered.length ? filtered : dateIdeas.filter((idea) => idea.costMin === 0);
+    const pool = filtered.length ? filtered : cityIdeas.slice(0, 1);
     const candidates = pool.filter((idea) => idea.id !== currentId);
     const source = candidates.length ? candidates : pool;
     const choice = source[Math.floor(Math.random() * source.length)];
@@ -521,10 +656,22 @@ export default function Home() {
     showToast(saved ? "已从约会清单移除" : "已加入我们的约会清单");
   };
 
-  const updateBudget = (value) => {
-    const next = Math.max(0, Math.min(99999, Number(value) || 0));
-    setBudget(next);
+  const updateBudgetRange = (minimum, maximum) => {
+    const nextMin = Math.max(0, Math.min(99999, Number(minimum) || 0));
+    const nextMax = Math.max(nextMin, Math.min(99999, Number(maximum) || 0));
+    setBudgetMin(nextMin);
+    setBudgetMax(nextMax);
     setSaved(false);
+  };
+
+  const updateMinimum = (value) => {
+    const next = Math.max(0, Math.min(99999, Number(value) || 0));
+    setBudgetMin(Math.min(next, budgetMax));
+  };
+
+  const updateMaximum = (value) => {
+    const next = Math.max(0, Math.min(99999, Number(value) || 0));
+    setBudgetMax(Math.max(next, budgetMin));
   };
 
   const handleAvatar = async (event, setter) => {
@@ -546,7 +693,7 @@ export default function Home() {
   const copyShareLink = async () => {
     const shareData = {
       personOne, personTwo, startDate, anniversaryName, anniversaryDate,
-      avatarOne, avatarTwo, budget,
+      avatarOne, avatarTwo, budgetMin, budgetMax, selectedCity,
     };
     const url = `${window.location.origin}${window.location.pathname}#share=${encodeShareData(shareData)}`;
     try {
@@ -561,6 +708,28 @@ export default function Home() {
       input.remove();
       showToast("分享链接已复制");
     }
+  };
+
+  const locateCity = () => {
+    if (!navigator.geolocation) {
+      showToast("当前浏览器不支持定位");
+      return;
+    }
+    showToast("正在匹配最近的城市…");
+    navigator.geolocation.getCurrentPosition(
+      ({ coords }) => {
+        const nearest = cityProfiles.reduce((best, city) => {
+          const latScale = Math.cos((coords.latitude * Math.PI) / 180);
+          const distance = ((city.lat - coords.latitude) ** 2)
+            + (((city.lng - coords.longitude) * latScale) ** 2);
+          return !best || distance < best.distance ? { city, distance } : best;
+        }, null);
+        setSelectedCity(nearest.city.name);
+        showToast(`已定位到 ${nearest.city.name}`);
+      },
+      () => showToast("定位失败，请手动选择城市"),
+      { enableHighAccuracy: false, timeout: 8000, maximumAge: 600000 },
+    );
   };
 
   const scrollToSettings = () => {
@@ -603,16 +772,31 @@ export default function Home() {
           </div>
         </div>
         <div className="divider" />
+        <div className="control-group location-row">
+          <div className="control-title"><span>所在城市</span><small>灵感会随城市变化</small></div>
+          <div className="location-control">
+            <label className="city-select"><Icon name="pin" size={16} /><select value={selectedCity} onChange={(event) => setSelectedCity(event.target.value)} aria-label="选择中国城市">
+              {cityProfiles.map((city) => <option key={city.name} value={city.name}>{city.name}</option>)}
+            </select></label>
+            <button onClick={locateCity}><Icon name="pin" size={14} /> 自动定位</button>
+            <span>{cityProfile.tags.slice(0, 3).join(" · ")}</span>
+          </div>
+        </div>
+        <div className="divider" />
         <div className="control-group budget-row">
-          <div className="control-title"><span>本次预算</span><small>两个人的总预算</small></div>
+          <div className="control-title"><span>价格区间</span><small>两个人的总预算</small></div>
           <div className="budget-control">
-            <label className="money-input"><span>¥</span><input type="number" min="0" max="99999" value={budget} onFocus={(event) => event.target.select()} onChange={(event) => updateBudget(event.target.value)} aria-label="输入约会预算" /></label>
+            <div className="range-inputs">
+              <label className="money-input"><span>¥</span><input type="number" min="0" max="99999" value={budgetMin} onFocus={(event) => event.target.select()} onChange={(event) => updateMinimum(event.target.value)} aria-label="最低预算" /></label>
+              <i>至</i>
+              <label className="money-input"><span>¥</span><input type="number" min="0" max="99999" value={budgetMax} onFocus={(event) => event.target.select()} onChange={(event) => updateMaximum(event.target.value)} aria-label="最高预算" /></label>
+            </div>
             <div className="budget-presets">
-              {budgetPresets.map((amount) => <button key={amount} className={budget === amount ? "active" : ""} onClick={() => updateBudget(amount)}>{amount === 0 ? "免费" : amount}</button>)}
+              {budgetRanges.map(([minimum, maximum]) => <button key={`${minimum}-${maximum}`} className={budgetMin === minimum && budgetMax === maximum ? "active" : ""} onClick={() => updateBudgetRange(minimum, maximum)}>¥{minimum}–{maximum === 3000 ? "3000+" : maximum}</button>)}
             </div>
           </div>
         </div>
-        <p className="budget-hint"><Icon name="check" size={14} /> 已找到 {affordableIdeas.length} 个预算内灵感，最高不超过 ¥{budget}</p>
+        <p className="budget-hint"><Icon name="check" size={14} /> {selectedCity}已找到 {affordableIdeas.length} 个 ¥{budgetMin}–{budgetMax} 区间灵感 · 灵感库共 {dateIdeas.length} 个</p>
       </section>
 
       <section id="couple-settings" className="profile-panel open" aria-label="情侣与纪念日设置">
@@ -667,8 +851,8 @@ export default function Home() {
             </div>
             <div className="meta-row">
               <span><Icon name="clock" size={17} />{current.time}</span>
-              <span><Icon name="pin" size={17} />{current.place}</span>
-              <span className="cost">约 ¥{current.costMin}–{Math.min(current.costMax, budget)}</span>
+              <span><Icon name="pin" size={17} />{currentPlace}</span>
+              <span className="cost">约 ¥{current.costMin}–{current.costMax}</span>
             </div>
             <ol className="mini-plan">
               {current.plan.map((step, index) => <li key={step}><span>{index + 1}</span>{step}</li>)}
@@ -676,7 +860,7 @@ export default function Home() {
           </div>
         </div>
         <button className="primary-button" onClick={pickIdea} disabled={revealing}>
-          <Icon name="rotate" size={19} />{revealing ? "正在寻找心动…" : `换一个 ¥${budget} 内的灵感`}
+          <Icon name="rotate" size={19} />{revealing ? "正在寻找心动…" : `换一个${selectedCity}灵感`}
         </button>
         <button className="surprise-link" onClick={pickIdea}>
           完全交给缘分 <Icon name="chevron" size={15} />
