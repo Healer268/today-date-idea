@@ -7,3 +7,4 @@ npm-debug.log*
 pnpm-lock.yaml
 vinext-*.log
 output/playwright
+github-dist
