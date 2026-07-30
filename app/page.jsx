@@ -748,26 +748,18 @@ export default function Home() {
   }, [startDate, relationshipDays]);
 
   const anniversary = useMemo(() => {
-    if (!anniversaryDate) return { days: 0, progress: 0, label: "还没有设置日期", date: "", originalDate: "" };
+    if (!anniversaryDate) return { days: 0, progress: 0, label: "还没有设置日期", date: "" };
     const today = new Date();
     const selected = parseInputDate(anniversaryDate);
-    if (!selected) return { days: 0, progress: 0, label: "日期格式不正确", date: "", originalDate: "" };
-    let next = selected >= new Date(today.getFullYear(), today.getMonth(), today.getDate())
-      ? selected
-      : new Date(today.getFullYear(), selected.getMonth(), selected.getDate());
-    if (next < new Date(today.getFullYear(), today.getMonth(), today.getDate())) {
-      next = new Date(today.getFullYear() + 1, selected.getMonth(), selected.getDate());
-    }
-    const days = daysBetween(today, next);
-    const previous = new Date(next.getFullYear() - 1, next.getMonth(), next.getDate());
-    const total = Math.max(1, daysBetween(previous, next));
-    const progress = Math.max(0, Math.min(100, ((total - days) / total) * 100));
+    if (!selected) return { days: 0, progress: 0, label: "日期格式不正确", date: "" };
+    const difference = daysBetween(today, selected);
+    const days = Math.abs(difference);
+    const progress = Math.min(100, (days / 365) * 100);
     return {
       days,
       progress,
-      date: formatFullDate(next),
-      originalDate: formatFullDate(selected),
-      label: days === 0 ? "就是今天 ♥" : `还有 ${days} 天`,
+      date: formatFullDate(selected),
+      label: difference === 0 ? "就是今天 ♥" : difference > 0 ? `还有 ${days} 天` : `已经过去 ${days} 天`,
     };
   }, [anniversaryDate]);
 
@@ -968,8 +960,8 @@ export default function Home() {
           <label className="profile-field"><span>你的名字</span><input value={personOne} maxLength={8} onChange={(event) => setPersonOne(event.target.value)} placeholder="输入名字" /></label>
           <label className="profile-field"><span>TA 的名字</span><input value={personTwo} maxLength={8} onChange={(event) => setPersonTwo(event.target.value)} placeholder="输入名字" /></label>
           <label className="profile-field"><span>在一起的日期</span><input type="date" value={startDate} onChange={(event) => setStartDate(event.target.value)} /></label>
-          <label className="profile-field wide-field"><span>额外纪念日名称（可选）</span><input value={anniversaryName} maxLength={16} onChange={(event) => setAnniversaryName(event.target.value)} placeholder="例如：第一次见面" /></label>
-          <label className="profile-field wide-field"><span>额外纪念日原始日期（每年重复）</span><input type="date" value={anniversaryDate} onChange={(event) => setAnniversaryDate(event.target.value)} /></label>
+          <label className="profile-field wide-field"><span>额外纪念日名称（可选）</span><input value={anniversaryName} maxLength={16} onChange={(event) => setAnniversaryName(event.target.value)} placeholder="例如：第一次聊天" /></label>
+          <label className="profile-field wide-field"><span>额外纪念日日期（记录原始日期）</span><input type="date" value={anniversaryDate} onChange={(event) => setAnniversaryDate(event.target.value)} /></label>
           <div className="settings-actions">
             <small>分享链接包含你填写的资料和压缩头像，请仅发给信任的人。</small>
             <button className="share-settings" onClick={copyShareLink}><Icon name="share" size={15} /> 复制分享链接</button>
@@ -1033,8 +1025,8 @@ export default function Home() {
               <span className="milestone-emoji">✨</span>
               <div>
                 <b>{anniversaryName || "特别纪念日"}</b>
-                <small>原始日期：{anniversary.originalDate}</small>
-                <small>下一次：{anniversary.date} · {anniversary.label}</small>
+                <small>原始日期：{anniversary.date}</small>
+                <small>{anniversary.label}</small>
               </div>
               <div className="progress"><i style={{ width: `${anniversary.progress}%` }} /></div>
             </article>
