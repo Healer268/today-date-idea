@@ -498,13 +498,36 @@ const DAY = 86400000;
 const storageKey = "today-date-idea-settings";
 
 function toInputDate(date) {
-  return date.toISOString().slice(0, 10);
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
+
+function parseInputDate(value) {
+  const [year, month, day] = value.split("-").map(Number);
+  if (!year || !month || !day) return null;
+  return new Date(year, month - 1, day);
+}
+
+function calendarDayNumber(date) {
+  return Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()) / DAY;
+}
+
+function daysBetween(fromDate, toDate) {
+  return Math.round(calendarDayNumber(toDate) - calendarDayNumber(fromDate));
+}
+
+function addCalendarDays(date, amount) {
+  const result = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+  result.setDate(result.getDate() + amount);
+  return result;
 }
 
 function getDefaultDates() {
   const today = new Date();
-  const started = new Date(today.getTime() - 128 * DAY);
-  const anniversary = new Date(today.getTime() + 72 * DAY);
+  const started = addCalendarDays(today, -128);
+  const anniversary = addCalendarDays(today, 72);
   return { started: toInputDate(started), anniversary: toInputDate(anniversary) };
 }
 
@@ -523,8 +546,13 @@ function decodeShareData(value) {
   return JSON.parse(new TextDecoder().decode(bytes));
 }
 
-function formatShortDate(date) {
-  return new Intl.DateTimeFormat("zh-CN", { month: "long", day: "numeric" }).format(date);
+function formatFullDate(date, withWeekday = false) {
+  return new Intl.DateTimeFormat("zh-CN", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    ...(withWeekday ? { weekday: "short" } : {}),
+  }).format(date);
 }
 
 function compressAvatar(file) {
@@ -595,7 +623,7 @@ export default function Home() {
 
   useEffect(() => {
     const now = new Date();
-    setDateLabel(new Intl.DateTimeFormat("zh-CN", { month: "long", day: "numeric", weekday: "short" }).format(now));
+    setDateLabel(formatFullDate(now, true));
     try {
       const shareValue = new URLSearchParams(window.location.hash.slice(1)).get("share");
       const stored = shareValue
@@ -670,18 +698,20 @@ export default function Home() {
     : current.place}`;
   const relationshipDays = useMemo(() => {
     if (!startDate) return 0;
-    return Math.max(0, Math.floor((new Date().setHours(0, 0, 0, 0) - new Date(`${startDate}T00:00:00`).getTime()) / DAY));
+    const start = parseInputDate(startDate);
+    if (!start) return 0;
+    return Math.max(0, daysBetween(start, new Date()));
   }, [startDate]);
 
   const automaticMilestones = useMemo(() => {
     if (!startDate) return [];
-    const start = new Date(`${startDate}T00:00:00`);
+    const start = parseInputDate(startDate);
+    if (!start) return [];
     const today = new Date();
-    today.setHours(0, 0, 0, 0);
 
     const hundredNumber = Math.max(100, Math.ceil(relationshipDays / 100) * 100);
-    const hundredDate = new Date(start.getTime() + hundredNumber * DAY);
-    const hundredDaysLeft = Math.max(0, Math.round((hundredDate - today) / DAY));
+    const hundredDate = addCalendarDays(start, hundredNumber);
+    const hundredDaysLeft = Math.max(0, daysBetween(today, hundredDate));
 
     let anniversaryYears = Math.max(1, today.getFullYear() - start.getFullYear());
     let anniversaryTarget = new Date(
@@ -697,19 +727,19 @@ export default function Home() {
         start.getDate(),
       );
     }
-    const anniversaryDaysLeft = Math.max(0, Math.round((anniversaryTarget - today) / DAY));
+    const anniversaryDaysLeft = Math.max(0, daysBetween(today, anniversaryTarget));
 
     return [
       {
         name: `在一起 ${hundredNumber} 天`,
-        date: formatShortDate(hundredDate),
+        date: formatFullDate(hundredDate),
         days: hundredDaysLeft,
         progress: Math.min(100, ((relationshipDays % 100) / 100) * 100),
         emoji: "💯",
       },
       {
         name: `${anniversaryYears} 周年纪念日`,
-        date: formatShortDate(anniversaryTarget),
+        date: formatFullDate(anniversaryTarget),
         days: anniversaryDaysLeft,
         progress: Math.min(100, (relationshipDays / (anniversaryYears * 365)) * 100),
         emoji: "💍",
@@ -718,17 +748,26 @@ export default function Home() {
   }, [startDate, relationshipDays]);
 
   const anniversary = useMemo(() => {
-    if (!anniversaryDate) return { days: 0, progress: 0, label: "还没有设置日期" };
+    if (!anniversaryDate) return { days: 0, progress: 0, label: "还没有设置日期", date: "" };
     const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    const selected = new Date(`${anniversaryDate}T00:00:00`);
-    let next = new Date(today.getFullYear(), selected.getMonth(), selected.getDate());
-    if (next < today) next = new Date(today.getFullYear() + 1, selected.getMonth(), selected.getDate());
-    const days = Math.round((next - today) / DAY);
+    const selected = parseInputDate(anniversaryDate);
+    if (!selected) return { days: 0, progress: 0, label: "日期格式不正确", date: "" };
+    let next = selected >= new Date(today.getFullYear(), today.getMonth(), today.getDate())
+      ? selected
+      : new Date(today.getFullYear(), selected.getMonth(), selected.getDate());
+    if (next < new Date(today.getFullYear(), today.getMonth(), today.getDate())) {
+      next = new Date(today.getFullYear() + 1, selected.getMonth(), selected.getDate());
+    }
+    const days = daysBetween(today, next);
     const previous = new Date(next.getFullYear() - 1, next.getMonth(), next.getDate());
-    const total = Math.max(1, Math.round((next - previous) / DAY));
+    const total = Math.max(1, daysBetween(previous, next));
     const progress = Math.max(0, Math.min(100, ((total - days) / total) * 100));
-    return { days, progress, label: days === 0 ? "就是今天 ♥" : `还有 ${days} 天` };
+    return {
+      days,
+      progress,
+      date: formatFullDate(next),
+      label: days === 0 ? "就是今天 ♥" : `还有 ${days} 天`,
+    };
   }, [anniversaryDate]);
 
   const pickIdea = () => {
@@ -977,7 +1016,7 @@ export default function Home() {
 
       <section className="milestones-section">
         <div className="section-heading">
-          <div><Icon name="calendar" size={18} /><span><b>我们的纪念日</b><small>根据在一起日期自动计算</small></span></div>
+          <div><Icon name="calendar" size={18} /><span><b>我们的纪念日</b><small>当前日期：{dateLabel || "正在读取"} · 按完整年月日计算</small></span></div>
           <button onClick={scrollToSettings}><Icon name="edit" size={14} /> 修改起始日期</button>
         </div>
         <div className="milestone-grid">
@@ -991,7 +1030,7 @@ export default function Home() {
           {anniversaryDate && (
             <article className="milestone-card custom-milestone">
               <span className="milestone-emoji">✨</span>
-              <div><b>{anniversaryName || "特别纪念日"}</b><small>{anniversary.label}</small></div>
+              <div><b>{anniversaryName || "特别纪念日"}</b><small>{anniversary.date} · {anniversary.label}</small></div>
               <div className="progress"><i style={{ width: `${anniversary.progress}%` }} /></div>
             </article>
           )}
