@@ -330,6 +330,67 @@ const cityProfiles = [
   { name: "海口", lat: 20.04, lng: 110.20, tags: ["滨海", "南方", "休闲"], spots: ["云洞图书馆", "骑楼老街", "西秀海滩"] },
 ];
 
+const regionGroups = [
+  ["北京市", ["北京"]],
+  ["天津市", ["天津"]],
+  ["河北省", ["石家庄", "唐山", "秦皇岛", "邯郸", "邢台", "保定", "张家口", "承德", "沧州", "廊坊", "衡水"]],
+  ["山西省", ["太原", "大同", "阳泉", "长治", "晋城", "朔州", "晋中", "运城", "忻州", "临汾", "吕梁"]],
+  ["内蒙古自治区", ["呼和浩特", "包头", "乌海", "赤峰", "通辽", "鄂尔多斯", "呼伦贝尔", "巴彦淖尔", "乌兰察布", "兴安盟", "锡林郭勒盟", "阿拉善盟"]],
+  ["辽宁省", ["沈阳", "大连", "鞍山", "抚顺", "本溪", "丹东", "锦州", "营口", "阜新", "辽阳", "盘锦", "铁岭", "朝阳", "葫芦岛"]],
+  ["吉林省", ["长春", "吉林", "四平", "辽源", "通化", "白山", "松原", "白城", "延边州"]],
+  ["黑龙江省", ["哈尔滨", "齐齐哈尔", "鸡西", "鹤岗", "双鸭山", "大庆", "伊春", "佳木斯", "七台河", "牡丹江", "黑河", "绥化", "大兴安岭"]],
+  ["上海市", ["上海"]],
+  ["江苏省", ["南京", "无锡", "徐州", "常州", "苏州", "南通", "连云港", "淮安", "盐城", "扬州", "镇江", "泰州", "宿迁"]],
+  ["浙江省", ["杭州", "宁波", "温州", "嘉兴", "湖州", "绍兴", "金华", "衢州", "舟山", "台州", "丽水"]],
+  ["安徽省", ["合肥", "芜湖", "蚌埠", "淮南", "马鞍山", "淮北", "铜陵", "安庆", "黄山", "滁州", "阜阳", "宿州", "六安", "亳州", "池州", "宣城"]],
+  ["福建省", ["福州", "厦门", "莆田", "三明", "泉州", "漳州", "南平", "龙岩", "宁德"]],
+  ["江西省", ["南昌", "景德镇", "萍乡", "九江", "新余", "鹰潭", "赣州", "吉安", "宜春", "抚州", "上饶"]],
+  ["山东省", ["济南", "青岛", "淄博", "枣庄", "东营", "烟台", "潍坊", "济宁", "泰安", "威海", "日照", "临沂", "德州", "聊城", "滨州", "菏泽"]],
+  ["河南省", ["郑州", "开封", "洛阳", "平顶山", "安阳", "鹤壁", "新乡", "焦作", "濮阳", "许昌", "漯河", "三门峡", "南阳", "商丘", "信阳", "周口", "驻马店", "济源"]],
+  ["湖北省", ["武汉", "黄石", "十堰", "宜昌", "襄阳", "鄂州", "荆门", "孝感", "荆州", "黄冈", "咸宁", "随州", "恩施州", "仙桃", "潜江", "天门", "神农架"]],
+  ["湖南省", ["长沙", "株洲", "湘潭", "衡阳", "邵阳", "岳阳", "常德", "张家界", "益阳", "郴州", "永州", "怀化", "娄底", "湘西州"]],
+  ["广东省", ["广州", "深圳", "珠海", "汕头", "佛山", "韶关", "湛江", "肇庆", "江门", "茂名", "惠州", "梅州", "汕尾", "河源", "阳江", "清远", "东莞", "中山", "潮州", "揭阳", "云浮"]],
+  ["广西壮族自治区", ["南宁", "柳州", "桂林", "梧州", "北海", "防城港", "钦州", "贵港", "玉林", "百色", "贺州", "河池", "来宾", "崇左"]],
+  ["海南省", ["海口", "三亚", "三沙", "儋州", "五指山", "琼海", "文昌", "万宁", "东方"]],
+  ["重庆市", ["重庆"]],
+  ["四川省", ["成都", "自贡", "攀枝花", "泸州", "德阳", "绵阳", "广元", "遂宁", "内江", "乐山", "南充", "眉山", "宜宾", "广安", "达州", "雅安", "巴中", "资阳", "阿坝州", "甘孜州", "凉山州"]],
+  ["贵州省", ["贵阳", "六盘水", "遵义", "安顺", "毕节", "铜仁", "黔西南州", "黔东南州", "黔南州"]],
+  ["云南省", ["昆明", "曲靖", "玉溪", "保山", "昭通", "丽江", "普洱", "临沧", "楚雄州", "红河州", "文山州", "西双版纳州", "大理州", "德宏州", "怒江州", "迪庆州"]],
+  ["西藏自治区", ["拉萨", "日喀则", "昌都", "林芝", "山南", "那曲", "阿里地区"]],
+  ["陕西省", ["西安", "铜川", "宝鸡", "咸阳", "渭南", "延安", "汉中", "榆林", "安康", "商洛"]],
+  ["甘肃省", ["兰州", "嘉峪关", "金昌", "白银", "天水", "武威", "张掖", "平凉", "酒泉", "庆阳", "定西", "陇南", "临夏州", "甘南州"]],
+  ["青海省", ["西宁", "海东", "海北州", "黄南州", "海南州", "果洛州", "玉树州", "海西州"]],
+  ["宁夏回族自治区", ["银川", "石嘴山", "吴忠", "固原", "中卫"]],
+  ["新疆维吾尔自治区", ["乌鲁木齐", "克拉玛依", "吐鲁番", "哈密", "昌吉州", "博尔塔拉州", "巴音郭楞州", "阿克苏地区", "克孜勒苏州", "喀什地区", "和田地区", "伊犁州", "塔城地区", "阿勒泰地区", "石河子"]],
+  ["香港特别行政区", ["香港"]],
+  ["澳门特别行政区", ["澳门"]],
+  ["台湾省", ["台北", "新北", "桃园", "台中", "台南", "高雄", "基隆", "新竹", "嘉义", "宜兰", "花莲", "台东"]],
+];
+
+const provinceTags = {
+  "北京市": ["都市", "历史", "艺术"], "天津市": ["北方", "滨水", "历史"],
+  "河北省": ["北方", "历史", "自然"], "山西省": ["北方", "历史", "自然"],
+  "内蒙古自治区": ["北方", "自然", "休闲"], "辽宁省": ["北方", "滨海", "历史"],
+  "吉林省": ["北方", "冰雪", "自然"], "黑龙江省": ["北方", "冰雪", "自然"],
+  "上海市": ["都市", "滨水", "艺术"], "江苏省": ["滨水", "历史", "园林"],
+  "浙江省": ["滨水", "历史", "自然"], "安徽省": ["历史", "自然", "滨水"],
+  "福建省": ["滨海", "历史", "南方"], "江西省": ["滨水", "历史", "自然"],
+  "山东省": ["北方", "滨海", "历史"], "河南省": ["北方", "历史", "美食"],
+  "湖北省": ["滨水", "历史", "美食"], "湖南省": ["美食", "自然", "夜景"],
+  "广东省": ["都市", "美食", "南方"], "广西壮族自治区": ["南方", "自然", "美食"],
+  "海南省": ["滨海", "南方", "休闲"], "重庆市": ["山城", "夜景", "美食"],
+  "四川省": ["自然", "美食", "休闲"], "贵州省": ["山城", "自然", "美食"],
+  "云南省": ["自然", "休闲", "南方"], "西藏自治区": ["自然", "北方", "冒险"],
+  "陕西省": ["北方", "历史", "美食"], "甘肃省": ["北方", "历史", "自然"],
+  "青海省": ["北方", "自然", "冒险"], "宁夏回族自治区": ["北方", "自然", "历史"],
+  "新疆维吾尔自治区": ["北方", "自然", "美食"], "香港特别行政区": ["都市", "滨海", "美食"],
+  "澳门特别行政区": ["都市", "历史", "美食"], "台湾省": ["滨海", "美食", "自然"],
+};
+
+function findProvinceByCity(cityName) {
+  return regionGroups.find(([, cities]) => cities.includes(cityName))?.[0] || "上海市";
+}
+
 const ideaSeeds = [
   ["咖啡风味盲测", "☕", 40, 140, ["松弛", "好玩"], ["都市", "艺术"], "独立咖啡店"],
   ["夜晚骑行追风", "🚲", 0, 60, ["冒险", "松弛"], ["滨水", "滨海", "都市"], "城市骑行道"],
@@ -492,6 +553,7 @@ export default function Home() {
   const [mood, setMood] = useState("随心");
   const [budgetMin, setBudgetMin] = useState(0);
   const [budgetMax, setBudgetMax] = useState(300);
+  const [selectedProvince, setSelectedProvince] = useState("上海市");
   const [selectedCity, setSelectedCity] = useState("上海");
   const [currentId, setCurrentId] = useState(1);
   const [saved, setSaved] = useState(false);
@@ -527,7 +589,11 @@ export default function Home() {
       if (Number.isFinite(stored.budgetMin)) setBudgetMin(stored.budgetMin);
       if (Number.isFinite(stored.budgetMax)) setBudgetMax(stored.budgetMax);
       if (!Number.isFinite(stored.budgetMax) && Number.isFinite(stored.budget)) setBudgetMax(stored.budget);
-      if (cityProfiles.some((city) => city.name === stored.selectedCity)) setSelectedCity(stored.selectedCity);
+      if (regionGroups.some(([province]) => province === stored.selectedProvince)) setSelectedProvince(stored.selectedProvince);
+      if (regionGroups.some(([, cities]) => cities.includes(stored.selectedCity))) {
+        setSelectedCity(stored.selectedCity);
+        if (!stored.selectedProvince) setSelectedProvince(findProvinceByCity(stored.selectedCity));
+      }
     } catch {
       // Keep the friendly defaults when saved data is unavailable.
     }
@@ -538,13 +604,22 @@ export default function Home() {
     if (!hydrated) return;
     window.localStorage.setItem(storageKey, JSON.stringify({
       personOne, personTwo, startDate, anniversaryName, anniversaryDate,
-      avatarOne, avatarTwo, budgetMin, budgetMax, selectedCity,
+      avatarOne, avatarTwo, budgetMin, budgetMax, selectedProvince, selectedCity,
     }));
-  }, [personOne, personTwo, startDate, anniversaryName, anniversaryDate, avatarOne, avatarTwo, budgetMin, budgetMax, selectedCity, hydrated]);
+  }, [personOne, personTwo, startDate, anniversaryName, anniversaryDate, avatarOne, avatarTwo, budgetMin, budgetMax, selectedProvince, selectedCity, hydrated]);
+
+  const provinceCities = useMemo(
+    () => regionGroups.find(([province]) => province === selectedProvince)?.[1] || ["上海"],
+    [selectedProvince],
+  );
 
   const cityProfile = useMemo(
-    () => cityProfiles.find((city) => city.name === selectedCity) || cityProfiles[1],
-    [selectedCity],
+    () => cityProfiles.find((city) => city.name === selectedCity) || {
+      name: selectedCity,
+      tags: provinceTags[selectedProvince] || ["都市", "自然", "历史"],
+      spots: ["城市公园", "老街", "滨水步道"],
+    },
+    [selectedProvince, selectedCity],
   );
 
   const cityIdeas = useMemo(() => dateIdeas.filter((idea) => {
@@ -664,6 +739,12 @@ export default function Home() {
     setSaved(false);
   };
 
+  const changeProvince = (province) => {
+    const cities = regionGroups.find(([name]) => name === province)?.[1] || ["上海"];
+    setSelectedProvince(province);
+    setSelectedCity(cities[0]);
+  };
+
   const updateMinimum = (value) => {
     const next = Math.max(0, Math.min(99999, Number(value) || 0));
     setBudgetMin(Math.min(next, budgetMax));
@@ -693,7 +774,7 @@ export default function Home() {
   const copyShareLink = async () => {
     const shareData = {
       personOne, personTwo, startDate, anniversaryName, anniversaryDate,
-      avatarOne, avatarTwo, budgetMin, budgetMax, selectedCity,
+      avatarOne, avatarTwo, budgetMin, budgetMax, selectedProvince, selectedCity,
     };
     const url = `${window.location.origin}${window.location.pathname}#share=${encodeShareData(shareData)}`;
     try {
@@ -725,6 +806,7 @@ export default function Home() {
           return !best || distance < best.distance ? { city, distance } : best;
         }, null);
         setSelectedCity(nearest.city.name);
+        setSelectedProvince(findProvinceByCity(nearest.city.name));
         showToast(`已定位到 ${nearest.city.name}`);
       },
       () => showToast("定位失败，请手动选择城市"),
@@ -775,8 +857,11 @@ export default function Home() {
         <div className="control-group location-row">
           <div className="control-title"><span>所在城市</span><small>灵感会随城市变化</small></div>
           <div className="location-control">
-            <label className="city-select"><Icon name="pin" size={16} /><select value={selectedCity} onChange={(event) => setSelectedCity(event.target.value)} aria-label="选择中国城市">
-              {cityProfiles.map((city) => <option key={city.name} value={city.name}>{city.name}</option>)}
+            <label className="city-select province-select"><select value={selectedProvince} onChange={(event) => changeProvince(event.target.value)} aria-label="选择省级地区">
+              {regionGroups.map(([province]) => <option key={province} value={province}>{province}</option>)}
+            </select></label>
+            <label className="city-select"><Icon name="pin" size={16} /><select value={selectedCity} onChange={(event) => setSelectedCity(event.target.value)} aria-label="选择城市">
+              {provinceCities.map((city) => <option key={city} value={city}>{city}</option>)}
             </select></label>
             <button onClick={locateCity}><Icon name="pin" size={14} /> 自动定位</button>
             <span>{cityProfile.tags.slice(0, 3).join(" · ")}</span>
