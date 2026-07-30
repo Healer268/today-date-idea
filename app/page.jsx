@@ -595,6 +595,7 @@ function Icon({ name, size = 20, strokeWidth = 1.8 }) {
     edit: <><path d="m4 20 4.2-1 10.7-10.7a2 2 0 0 0-2.8-2.8L5.4 16.2 4 20Z"/><path d="m14.5 6.9 2.8 2.8"/></>,
     upload: <><path d="M12 16V4"/><path d="m7 9 5-5 5 5"/><path d="M5 20h14"/></>,
     share: <><circle cx="18" cy="5" r="2.5"/><circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="19" r="2.5"/><path d="m8.2 10.8 7.6-4.5M8.2 13.2l7.6 4.5"/></>,
+    wechat: <><path d="M9.5 5C5.9 5 3 7.3 3 10.1c0 1.6.9 3 2.4 4l-.6 2.1 2.4-1.1c.7.2 1.5.3 2.3.3 3.6 0 6.5-2.3 6.5-5.2S13.1 5 9.5 5Z"/><path d="M14.8 9.2c3.4 0 6.2 2.1 6.2 4.8 0 1.4-.8 2.8-2.2 3.7l.5 1.8-2.1-1c-.7.2-1.5.3-2.3.3-2.5 0-4.6-1.1-5.6-2.8"/><path d="M7.4 9h.1M11.6 9h.1M13.1 13h.1M17.3 13h.1"/></>,
   };
   return <svg viewBox="0 0 24 24" width={size} height={size} fill="none" stroke="currentColor" strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">{paths[name]}</svg>;
 }
@@ -826,24 +827,50 @@ export default function Home() {
     }
   };
 
-  const copyShareLink = async () => {
+  const createShareLink = () => {
     const shareData = {
       personOne, personTwo, startDate, anniversaryName, anniversaryDate,
       avatarOne, avatarTwo, budgetMin, budgetMax, selectedProvince, selectedCity,
     };
-    const url = `${window.location.origin}${window.location.pathname}#share=${encodeShareData(shareData)}`;
+    return `${window.location.origin}${window.location.pathname}#share=${encodeShareData(shareData)}`;
+  };
+
+  const copyText = async (value) => {
     try {
-      await navigator.clipboard.writeText(url);
-      showToast("分享链接已复制");
+      await navigator.clipboard.writeText(value);
     } catch {
       const input = document.createElement("textarea");
-      input.value = url;
+      input.value = value;
       document.body.appendChild(input);
       input.select();
       document.execCommand("copy");
       input.remove();
-      showToast("分享链接已复制");
     }
+  };
+
+  const copyShareLink = async () => {
+    await copyText(createShareLink());
+    showToast("分享链接已复制");
+  };
+
+  const shareToWeChat = async () => {
+    const url = createShareLink();
+    const sharePayload = {
+      title: "今天约什么",
+      text: `${personOne || "我"}和${personTwo || "TA"}的情侣约会主页`,
+      url,
+    };
+    if (navigator.share) {
+      try {
+        await navigator.share(sharePayload);
+        showToast("分享面板已打开");
+        return;
+      } catch (error) {
+        if (error?.name === "AbortError") return;
+      }
+    }
+    await copyText(url);
+    showToast("链接已复制，请粘贴到微信发送");
   };
 
   const locateCity = () => {
@@ -964,6 +991,7 @@ export default function Home() {
           <label className="profile-field wide-field"><span>额外纪念日日期（记录原始日期）</span><input type="date" value={anniversaryDate} onChange={(event) => setAnniversaryDate(event.target.value)} /></label>
           <div className="settings-actions">
             <small>分享链接包含你填写的资料和压缩头像，请仅发给信任的人。</small>
+            <button className="wechat-share" onClick={shareToWeChat}><Icon name="wechat" size={16} /> 分享到微信</button>
             <button className="share-settings" onClick={copyShareLink}><Icon name="share" size={15} /> 复制分享链接</button>
             <button className="save-settings" onClick={() => showToast("设置已保存")}><Icon name="check" size={15} /> 保存设置</button>
           </div>

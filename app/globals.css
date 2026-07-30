@@ -119,9 +119,10 @@ main { min-height: 100vh; position: relative; overflow: hidden; padding-bottom: 
 .avatar-preview { width: 52px; height: 52px; flex: 0 0 auto; border-radius: 50%; display: grid; place-items: center; background-size: cover; background-position: center; font-size: 15px; font-weight: 650; }
 .settings-actions { grid-column: 1 / -1; display: flex; align-items: center; justify-content: flex-end; gap: 8px; padding-top: 3px; }
 .settings-actions small { margin-right: auto; color: #aaa3a7; font-size: 8px; line-height: 1.5; }
-.save-settings, .share-settings { height: 36px; border-radius: 10px; padding: 0 14px; display: flex; align-items: center; gap: 6px; cursor: pointer; font-size: 10px; font-weight: 620; }
+.save-settings, .share-settings, .wechat-share { height: 36px; border-radius: 10px; padding: 0 14px; display: flex; align-items: center; gap: 6px; cursor: pointer; font-size: 10px; font-weight: 620; white-space: nowrap; }
 .save-settings { border: 0; color: white; background: linear-gradient(180deg, #ed6c80, #dd5269); box-shadow: 0 8px 18px rgba(220,77,101,.18); }
 .share-settings { border: 1px solid rgba(233,95,117,.16); color: #c45164; background: #fff4f5; }
+.wechat-share { border: 0; color: white; background: linear-gradient(180deg, #28c66f, #16a95b); box-shadow: 0 8px 18px rgba(27,177,94,.18); }
 
 .result-wrap { width: min(760px, calc(100% - 40px)); margin: 0 auto; display: flex; flex-direction: column; align-items: center; position: relative; z-index: 1; }
 .idea-card { width: 100%; min-height: 360px; display: grid; grid-template-columns: 41% 59%; background: white; border-radius: 28px; overflow: hidden; box-shadow: 0 24px 80px rgba(82, 52, 54, .11); border: 1px solid rgba(87, 65, 67, .06); transition: opacity .2s, transform .42s cubic-bezier(.2,.8,.2,1); }
